@@ -119,7 +119,7 @@ class HTML {
 			$var.="$key = \"$value\"";
 		}
 
-		echo "<form action=".$action." method=".$method." ".$var." >";
+		echo "<form action=\"".$action."\" method=\"".$method."\"".$var.">";
 	}
 
 	public static function endForm(){
@@ -177,7 +177,7 @@ class HTML {
 		foreach ($attr as $key => $value) {
 			$var.="$key = \"$value\"";
 		}
-    	echo "<img src=\"$path\" width=\"$width\" height=\"$height\" $var />";
+    	echo "<img src=\"$path\" width=\"$width\" height=\"$height\" $var />\n";
     }
 
     public static function favicon($path){
