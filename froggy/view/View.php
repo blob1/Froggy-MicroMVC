@@ -2,14 +2,15 @@
 
 class View {
 
-	public static function make($path,$data=array()){
+	public static function make($path,$data=array(),$msg=array()){
+
+		foreach ($msg as $key => $value) {
+			Session::set($key,$value);
+		}
 
 		extract($data);
-
 		$dir = 'app/Views/';
-
 		require $dir . $path . '.php';
-
 	}
 
 	public static function showError($errorCode){

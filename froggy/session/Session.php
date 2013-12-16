@@ -18,6 +18,14 @@ class Session {
 		}
 	}
 
+	public static function flash($key){
+		if(self::has($key)){
+			$var =self::get($key);
+			self::destroy($key);
+			return $var;
+		}
+	}
+
 	public static function destroy($key){
 		unset($_SESSION[$key]);
 	}
