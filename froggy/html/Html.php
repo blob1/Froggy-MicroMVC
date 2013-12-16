@@ -113,13 +113,17 @@ class HTML {
 		echo "<input type=\"password\" value=\"".$value."\" ".$var." />";
 	}
 
-	public static function form($action,$method,$attr=array()){
+	public static function form($action,$method,$enctype=null,$attr=array()){
 		$var='';
 		foreach ($attr as $key => $value) {
 			$var.="$key = \"$value\"";
 		}
+		$par='';
+		if(!is_null($enctype)){
+			$par='multipart/form-data';
+		}
 
-		echo "<form action=\"".$action."\" method=\"".$method."\"".$var.">";
+		echo "<form action=\"".$action."\" $par method=\"".$method."\"".$var.">";
 	}
 
 	public static function endForm(){

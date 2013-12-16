@@ -10,4 +10,8 @@ class Input {
 		}
 	}
 
+	public static function files($name){		
+		return $_FILES[$name];		
+	}
+
 }
