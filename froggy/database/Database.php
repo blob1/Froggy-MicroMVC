@@ -42,6 +42,18 @@ class FroggyDatabase {
 		return $st->fetchAll();
 	}
 
+	public static function queryOne($val,$field='id'){
+		$db = FroggyDatabase::con();
+		$class=get_called_class();
+	
+		$st=$db->query("SELECT * FROM `".$class::$table."` WHERE `$field`='$val' ");
+
+		$error = $db->errorInfo();
+		echo $error[2];
+
+		return $st->fetchAll();
+	}
+
 	public static function insert($data){
 		$db = FroggyDatabase::con();
 		$class=get_called_class();
@@ -119,32 +131,6 @@ class FroggyDatabase {
 		$var = $st->fetchAll();
 
 		return $var['0']['total'];
-	}
-
-	public static function getByField($field,$condition,$order='asc'){
-		$db = FroggyDatabase::con();
-		$class=get_called_class();
-
-		$st=$db->query("SELECT ".$field." FROM `".$class::$table."` ".$condition." ORDER BY ".$field." ".$order." LIMIT 0,1");
-
-		$error = $db->errorInfo();
-		echo $error[2];
-		$var = $st->fetchAll();
-
-		return $var['0'][$field];
-	}
-
-	public static function getByFieldRaw($table,$field,$condition,$order='asc'){
-		$db = FroggyDatabase::con();
-		$class=get_called_class();
-
-		$st=$db->query("SELECT ".$field." FROM `".$table."` ".$condition." ORDER BY ".$field." ".$order." LIMIT 0,1");
-
-		$error = $db->errorInfo();
-		echo $error[2];
-		$var = $st->fetchAll();
-
-		return $var['0'][$field];
 	}
 
 	public static function plusOne($field,$condition){

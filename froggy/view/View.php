@@ -2,13 +2,26 @@
 
 class View {
 
-	public static function make($path,$data=array(),$msg=array()){
+	public static function make($path,$data=null,$msg=array()){
 
 		foreach ($msg as $key => $value) {
 			Session::set($key,$value);
 		}
 
-		extract($data);
+		if(!is_null($data)){
+			extract($data);
+		}
+		
+		$dir = 'app/Views/';
+		require $dir . $path . '.php';
+	}
+
+	public static function show($path,$msg=array()){
+
+		foreach ($msg as $key => $value) {
+			Session::set($key,$value);
+		}
+
 		$dir = 'app/Views/';
 		require $dir . $path . '.php';
 	}
@@ -28,7 +41,4 @@ class View {
 
 		echo "<!DOCTYPE html>\n<html>\n<head>\n<title>Froggy Error Status</title>\n</head>\n<body>\n<h1>$errorCode $var</h1>\n</body>\n</html>\n";
 	}
-
-
-
 }
