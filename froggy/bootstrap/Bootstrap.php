@@ -5,50 +5,45 @@ class Bootstrap {
 	function __construct(){
 
 		session_start();
-
 		require 'app/config/config.php';
 
-		$url = isset($_GET['url']) ? $_GET['url'] : null;
-        $url=  rtrim($url, '/');
-        $url=  explode('/', $url);
-
-        if(empty($url[0])){
-        	$var = Configuration::$DEF_CONTROLLER;
-        	require 'app/Controllers/'.$var.'.php';
-            $controller = new $var();
-            $controller->{Configuration::$DEF_METHOD}();
-        }else{
-            $file='app/Controllers/'.$url[0].'.php';
-            if(file_exists($file)){
-                require $file;
-            }else{
-                View::showError(404);
-                return false;
-            }
-            
-            $controller=new $url[0];
-
-            if(isset($url[2])){
-                if(method_exists($controller, $url[1])){
-                    $controller->$url[1]($url[2]);
-                }else{
-                    View::showError(404);
-                }
-            }else{
-                if(isset($url[1])){
-	                if(method_exists($controller, $url[1])){
-	                    $controller->$url[1]();
-	                }else{
-	                    View::showError(404);
-	            	}
-                }else{
-                    $controller->{Configuration::$DEF_METHOD}();
-                }
-            }
-
-
-      	}  
+        self::get(self::getUrl('url'),Configuration::$DEF_CONTROLLER.'@'.Configuration::$DEF_METHOD);
         
 	}
+
+    public static function get($url,$control=''){
+
+        $var = explode("@", $control);
+        if(count($url)==1 && empty($url[0])){
+            self::goToController($var[0],$var[1],array());
+        }elseif(count($url)==1 && !empty($url[0])){
+            self::goToController($url[0],$var[1],array());
+        }elseif(count($url)==2 ){
+            self::goToController($url[0],$url[1],array());
+        }else{
+            $para=array();
+            for ($i=2; $i < count($url); $i++) { 
+                $param[]=$url[$i];
+            }
+            self::goToController($url[0],$url[1],$param);
+        }
+
+    }
+
+    public static function getUrl($link){
+        if(isset($_GET[$link])){
+            $url=$_GET[$link];
+            $url=  rtrim($url, '/');
+            $url=  explode('/', $url);
+            return $url;
+        }else{
+            return false;
+        }
+    }
+
+    public static function goToController($class,$name,$param=array()){
+        $controller=new $class();
+        call_user_func_array(array($controller, $name), $param);
+    }
 
 }
