@@ -6,10 +6,6 @@ class Path {
 		return Configuration::$BASE_PATH;
 	}
 
-	public static function action(){
-		return Configuration::$BASE_PATH;	
-	}
-
 	public static function public_path(){
 		return Configuration::$BASE_PATH . 'public/';
 	}
