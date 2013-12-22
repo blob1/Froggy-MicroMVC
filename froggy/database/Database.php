@@ -60,10 +60,15 @@ class FroggyDatabase {
 
 		$field=$class::$field;
 		$var=$value=$exec='';
+		$val=array();
+		foreach ($data as $key => $valu) {
+			$val[]=$valu;
+		}
+
 		for ($i=0; $i < COUNT($field); $i++) { 
 			$var.="`".$field[$i]."`,";
 			$value.=":test".($i+1).",";
-			$exec[":test".($i+1)]=$data[$i];
+			$exec[":test".($i+1)]=$val[$i];
 		}
 
 		$st=$db->prepare("INSERT INTO `".$class::$table."`(".rtrim($var,',').") VALUES(".rtrim($value,",").")");
@@ -80,10 +85,16 @@ class FroggyDatabase {
 
 		$field=$class::$field;
 		$var=$value=$exec='';
+
+		$val=array();
+		foreach ($data as $key => $valu) {
+			$val[]=$valu;
+		}
+
 		for ($i=0; $i < COUNT($field); $i++) { 
 			if($field[$i]!=$class::$primaryKey){
 				$var.="`".$field[$i]."` = :test".($i).",";
-				$exec[":test".($i)]=$data[$i-1];
+				$exec[":test".($i)]=$val[$i-1];
 			}
 			
 		}
