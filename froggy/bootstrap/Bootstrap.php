@@ -5,35 +5,40 @@ class Bootstrap {
 	function __construct(){
 
 		session_start();
-		require 'app/config/config.php';
 
-        self::get(self::getUrl('url'),Configuration::$DEF_CONTROLLER.'@'.Configuration::$DEF_METHOD);
+        self::get(self::getUrl('url'));
         
 	}
 
-    public static function get($url,$control=''){
+    private static function get($url){
 
-        $var = explode("@", $control);
-        if(count($url)==1 && empty($url[0])){
-            self::goToController($var[0],$var[1],array());
-        }elseif(count($url)==1 && !empty($url[0])){
-            self::goToController($url[0],$var[1],array());
-        }elseif(count($url)==2 ){
-            self::goToController($url[0],$url[1],array());
-        }else{
-            $para=array();
-            for ($i=2; $i < count($url); $i++) { 
-                $param[]=$url[$i];
+        $var = $url;
+
+        self::load($url);
+        if(!empty($url)){
+            if(method_exists($url[0],isset($url[1]) ? $url[1] : Configuration::$DEF_METHOD )){
+                if(isset($url[1])){
+                    array_shift($var);
+                    array_shift($var);
+                    self::goToController($url[0],$url[1],$var);
+                }else{
+                    self::goToController($url[0],Configuration::$DEF_METHOD);
+                }
+            }else{
+                View::showError(404);
             }
-            self::goToController($url[0],$url[1],$param);
+        }else{
+            self::goToController(ucfirst(Configuration::$DEF_CONTROLLER),Configuration::$DEF_METHOD);
         }
+
 
     }
 
-    public static function getUrl($link){
+    private static function getUrl($link){
         if(isset($_GET[$link])){
             $url=$_GET[$link];
             $url=  rtrim($url, '/');
+            $url=filter_var($url,FILTER_SANITIZE_URL);
             $url=  explode('/', $url);
             return $url;
         }else{
@@ -41,7 +46,16 @@ class Bootstrap {
         }
     }
 
-    public static function goToController($class,$name,$param=array()){
+    private static function load($path){
+        $file ='app/Controllers/'.ucfirst($path[0]).'.php';
+        if(file_exists($file)){
+            require 'app/Controllers/'.ucfirst($path[0]).'.php';
+        }else{
+            require 'app/Controllers/'.ucfirst(Configuration::$DEF_CONTROLLER).'.php';
+        }       
+    }
+
+    private static function goToController($class,$name,$param=array()){
         $controller=new $class();
         call_user_func_array(array($controller, $name), $param);
     }
