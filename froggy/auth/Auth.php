@@ -5,7 +5,7 @@ class Auth {
 	public static function attempt($user,$pass){
 		require 'app/Config/auth.php';
 
-		if(UsersModel::isHas('username',$user) && UsersModel::isHas('username',$pass)){
+		if(UsersModel::isHas('username',$user) && UsersModel::isHas('password',$pass)){
 			Session::set('FroggyUsers',UsersModel::getByField('id',"WHERE username = '".$user."'"));
 			return true;
 		}else{
