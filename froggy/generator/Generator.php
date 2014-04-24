@@ -1,6 +1,6 @@
 <?php
 
-class Generator {
+class Generators {
 
 	public static function make($table,$field=array()){
 
