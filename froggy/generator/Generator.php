@@ -27,7 +27,7 @@ class Generators {
 		$var=$role='';
 		foreach ($field as $key => $value) {
 			$var.="'".$key."'=>Input::get('".$key."'),";
-			$role.="'".$key."'=> '5|required',";
+			$role.="'".$key."'=> 'max=5|required',";
 		}
 
 		$file = fopen("app/Controllers/".ucfirst($class).".php","w");
